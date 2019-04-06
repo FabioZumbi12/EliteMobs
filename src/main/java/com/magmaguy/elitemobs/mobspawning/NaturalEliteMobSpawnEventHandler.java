@@ -42,16 +42,17 @@ public class NaturalEliteMobSpawnEventHandler implements Listener {
     /*
     This manages elite mob entities that are spawned naturally
      */
-    public static void naturalMobProcessor(Entity entity, CreatureSpawnEvent.SpawnReason spawnReason) {
+    public static EliteMobEntity naturalMobProcessor(Entity entity, CreatureSpawnEvent.SpawnReason spawnReason) {
 
         int eliteMobLevel = getNaturalMobLevel(entity.getLocation());
-        if (eliteMobLevel < 0) return;
+        if (eliteMobLevel < 0) return null;
 
         EliteMobEntity eliteMobEntity = new EliteMobEntity((LivingEntity) entity, eliteMobLevel);
 
         if (spawnReason.equals(CreatureSpawnEvent.SpawnReason.SPAWNER))
             eliteMobEntity.setHasSpecialLoot(false);
 
+        return eliteMobEntity;
     }
 
     public static int getNaturalMobLevel(Location spawnLocation) {

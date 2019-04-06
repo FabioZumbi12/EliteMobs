@@ -103,7 +103,7 @@ public class EliteMobEntity {
         /*
         Start tracking the entity
          */
-        EntityTracker.registerEliteMob(this);
+        //EntityTracker.registerEliteMob(this); //Will be registered on event handler
 
         eliteMob.setCanPickupItems(false);
 

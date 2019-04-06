@@ -17,8 +17,10 @@ package com.magmaguy.elitemobs.mobspawning;
 
 import com.magmaguy.elitemobs.EntityTracker;
 import com.magmaguy.elitemobs.MetadataHandler;
+import com.magmaguy.elitemobs.api.EliteMobSpawnEvent;
 import com.magmaguy.elitemobs.config.*;
 import com.magmaguy.elitemobs.items.customenchantments.CustomEnchantmentCache;
+import com.magmaguy.elitemobs.mobconstructor.EliteMobEntity;
 import com.magmaguy.elitemobs.mobconstructor.mobdata.aggressivemobs.EliteMobProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -91,8 +93,16 @@ public class NaturalMobSpawnEventHandler implements Listener {
         if (!(ThreadLocalRandom.current().nextDouble() < validChance))
             return;
 
-        NaturalEliteMobSpawnEventHandler.naturalMobProcessor(livingEntity, event.getSpawnReason());
+        //Fire listeners
+        EliteMobEntity eliteMob = NaturalEliteMobSpawnEventHandler.naturalMobProcessor(livingEntity, event.getSpawnReason());
+        if (eliteMob == null) return;
 
+        EliteMobSpawnEvent eliteMobSpawnEvent = new EliteMobSpawnEvent(livingEntity, eliteMob, event.getSpawnReason());
+        Bukkit.getPluginManager().callEvent(eliteMobSpawnEvent);
+
+        if (!eliteMobSpawnEvent.isCancelled()) {
+            EntityTracker.registerEliteMob(eliteMobSpawnEvent.getEliteMob());
+        }
     }
 
     private static int getHuntingGearBonus(Entity entity) {
